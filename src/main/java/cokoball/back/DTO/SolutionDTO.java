@@ -4,9 +4,6 @@ public class SolutionDTO {
     private Long emotionId;
     private String content;
 
-    public SolutionDTO() {
-    }
-
     public SolutionDTO(Long emotionId, String content) {
         this.emotionId = emotionId;
         this.content = content;

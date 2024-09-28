@@ -15,7 +15,7 @@ public class Diary {
     private Long id;
 
     @Column(nullable = false)
-    private String diaryNum;
+    private String diaryId;
 
     @Column(nullable = false)
     private String content;
@@ -31,4 +31,20 @@ public class Diary {
     private Emotion emotion;
 
     private LocalDate createDate;
+
+    public Diary(String diaryId, String content, Emotion emotion, User user, LocalDate createDate) {
+        this.diaryId = diaryId;
+        this.content = content;
+        this.emotion = emotion;
+        this.user = user;
+        this.createDate = createDate;
+        this.checkSolution = false;
+    }
+
+    public Diary(String diaryId, String content, Emotion emotion, cokoball.back.User.Entity.User user, LocalDate createDate) {
+    }
+
+    public Boolean getCheckSolution() {
+        return checkSolution;
+    }
 }

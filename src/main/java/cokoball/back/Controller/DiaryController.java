@@ -1,11 +1,13 @@
 package cokoball.back.Controller;
 
 import cokoball.back.DTO.DiaryDTO;
+import cokoball.back.DTO.SolutionDTO;
+import cokoball.back.Entity.Diary;
+import cokoball.back.Entity.Solution;
 import cokoball.back.Service.DiaryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -15,17 +17,29 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
+    @Autowired
     public DiaryController(DiaryService diaryService) {
         this.diaryService = diaryService;
     }
 
-    @GetMapping("/emotion/{emotionId}")
+    // 특정 emotionId와 diaryId로 일기 작성
+    @PostMapping("/{emotionId}/{diaryId}")
+    public ResponseEntity<Diary> createDiary(
+            @PathVariable Long emotionId,
+            @PathVariable String diaryId,
+            @RequestBody DiaryDTO diaryDto) {
+
+        // diaryId와 emotionId를 DTO에 반영
+        diaryDto.setEmotionId(emotionId);
+        diaryDto.setDiaryId(diaryId);
+
+        // 서비스에서 일기 저장 로직 호출
+        Diary savedDiary = diaryService.saveDiary(diaryDto);
+        return ResponseEntity.ok(savedDiary);
+    }
+
+    @GetMapping("/{emotionId}")
     public List<DiaryDTO> getDiariesByEmotion(@PathVariable Long emotionId) {
         return diaryService.getDiariesByEmotion(emotionId);
     }
 }
-
-
-// 맨 처음 사용자가 Emotion 에 따른 Solution을 적으면 이걸 db에 저장해야 해.
-// 관련 코드를 작성해 줘.
-// db terminal은 아래를 참고해 줘.
