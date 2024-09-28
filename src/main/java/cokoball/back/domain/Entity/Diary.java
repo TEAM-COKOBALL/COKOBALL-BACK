@@ -18,12 +18,7 @@ public class Diary {
     private Long id;
 
     @Column(nullable = false)
-    private String diaryId;
-
-    @Column(nullable = false)
     private String content;
-
-    private Boolean checkSolution;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -35,12 +30,10 @@ public class Diary {
 
     private LocalDate createDate;
 
-    public Diary(String diaryId, String content, Emotion emotion, User user, LocalDate createDate) {
-        this.diaryId = diaryId;
+    public Diary(String content, Emotion emotion, User user, LocalDate createDate) {
         this.content = content;
         this.emotion = emotion;
         this.user = user;
         this.createDate = createDate;
-        this.checkSolution = false;
     }
 }

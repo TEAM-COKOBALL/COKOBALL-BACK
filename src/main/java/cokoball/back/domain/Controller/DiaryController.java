@@ -17,15 +17,13 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     // 특정 emotionId와 diaryId로 일기 작성
-    @PostMapping("/{emotionId}/{diaryId}")
+    @PostMapping("/{emotionId}")
     public ResponseEntity<Diary> createDiary(
             @PathVariable Long emotionId,
-            @PathVariable String diaryId,
             @RequestBody DiaryDTO diaryDto) {
 
         // diaryId와 emotionId를 DTO에 반영
         diaryDto.setEmotionId(emotionId);
-        diaryDto.setDiaryId(diaryId);
 
         // 서비스에서 일기 저장 로직 호출
         Diary savedDiary = diaryService.saveDiary(diaryDto);

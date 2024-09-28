@@ -16,11 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
-
     private final DiaryRepository diaryRepository;
     private final EmotionRepository emotionRepository;
     private final UserRepository userRepository;
-
 
     public List<DiaryDTO> getDiariesByEmotion(Long emotionId) {
         Emotion emotion = emotionRepository.findById(emotionId).orElseThrow(() -> new RuntimeException("Emotion not found"));
@@ -30,10 +28,7 @@ public class DiaryService {
 
     private DiaryDTO toDTO(Diary diary) {
         DiaryDTO dto = new DiaryDTO();
-        dto.setId(diary.getId());
-        dto.setDiaryId(diary.getDiaryId());
         dto.setContent(diary.getContent());
-        dto.setCheckSolution(diary.getCheckSolution());
         dto.setUserId(diary.getUser() != null ? diary.getUser().getId() : null);
         dto.setEmotionId(diary.getEmotion().getId());
         dto.setCreateDate(diary.getCreateDate());
@@ -52,13 +47,11 @@ public class DiaryService {
 
         // 새로운 Diary 엔티티 생성
         Diary diary = new Diary(
-                diaryDto.getDiaryId(),
                 diaryDto.getContent(),
                 emotion,
                 user,
                 diaryDto.getCreateDate()
         );
-        diary.setCheckSolution(diaryDto.getCheckSolution());
 
         // DB에 저장
         return diaryRepository.save(diary);
