@@ -1,6 +1,7 @@
 package cokoball.back.domain.User.Controller;
 
 import cokoball.back.domain.User.DTO.LoginRequestDTO;
+import cokoball.back.domain.User.DTO.SignupRequestDTO;
 import cokoball.back.domain.User.Service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,9 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signUp(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam String passwordConfirm) {
+            @RequestBody SignupRequestDTO requestDTO) {
 
-        log.debug("username : {}", username);
-
-        String result = userService.signUp(username, password, passwordConfirm);
+        String result = userService.signUp(requestDTO.getUsername(), requestDTO.getPassword(), requestDTO.getPasswordConfirm());
         Map<String, Object> response = new HashMap<>();
 
         if (result.equals("회원가입 성공")) {
@@ -43,9 +40,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequestDTO requestDTO) {
 
-        log.info("username : {} , password : {}", requestDTO.username(), requestDTO.password());
+        log.info("username : {} , password : {}", requestDTO.getUsername(), requestDTO.getPassword());
 
-        String token = userService.login(requestDTO.username(), requestDTO.password());
+        String token = userService.login(requestDTO.getUsername(), requestDTO.getPassword());
         Map<String, Object> response = new HashMap<>();
 
         if (token.equals("아이디 또는 비밀번호가 틀렸습니다.")) {
