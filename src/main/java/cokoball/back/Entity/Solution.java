@@ -19,11 +19,6 @@ public class Solution {
     @Column(nullable = false)
     private String content;
 
-    // Constructor, Getter, and Setter
-
-    public Solution() {
-    }
-
     public Solution(Emotion emotion, String content) {
         this.emotion = emotion;
         this.content = content;
