@@ -25,7 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/api/auth/**", "/favicon.ico");
+        return web -> web.ignoring().requestMatchers("/api/auth/**", "/favicon.ico", "/swagger/**", "/swagger-ui/**", "/api-docs/**");
     }
 
     @Bean
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll()  // 인증이 필요 없는 경로
+                                .requestMatchers("/api/auth/**", "/swagger/**").permitAll()  // 인증이 필요 없는 경로
                                 .anyRequest().authenticated()  // 그 외의 경로는 인증 필요
                 )
                 .sessionManagement(sessionManagement ->
