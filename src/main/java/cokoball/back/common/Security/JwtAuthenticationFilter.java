@@ -13,6 +13,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collections;
 
 @Component
 @Slf4j
@@ -24,16 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // Authorization 헤더에서 토큰 추출
         try {
             String token = getAccessTokenFromHeader(request);
-
             log.info("token: {}", token);
 
-            if(token == null || token.isEmpty()) {
+            if (token == null || token.isEmpty()) {
                 log.info("토큰 검사를 안함.");
                 filterChain.doFilter(request, response);
-                return ;
+                return;
             }
 
             // 토큰 검증
@@ -45,15 +48,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 토큰에서 사용자 정보 추출
             String username = jwtTokenProvider.getUsernameFromToken(token);
-            request.setAttribute("username", username); // 요청 속성에 사용자 정보 추가
+
+            // SecurityContextHolder에 사용자 정보 저장
+            UserDetails userDetails = new User(username, "", Collections.emptyList());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // 다음 필터로 요청 전달
             filterChain.doFilter(request, response);
 
-        } catch (IOException e) {
-            log.debug("jwt 필터 에러 발생");
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+        } catch (JwtException e) {
+            log.debug("JWT 처리 중 에러 발생", e);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
