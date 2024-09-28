@@ -19,7 +19,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<Map<String, Object>> signUp(
             @RequestParam String username,
             @RequestParam String password,
             @RequestParam String passwordConfirm) {
@@ -32,13 +32,13 @@ public class AuthController {
         if (result.equals("회원가입 성공")) {
             response.put("status", "success");
             response.put("message", result);
+            return ResponseEntity.ok(response); // 200 OK 응답과 함께 데이터 반환
         } else {
             response.put("status", "error");
             response.put("message", result);
+            return ResponseEntity.badRequest().body(response); // 400 Bad Request 응답과 함께 데이터 반환
         }
-        return ResponseEntity.noContent().build();
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequestDTO requestDTO) {
