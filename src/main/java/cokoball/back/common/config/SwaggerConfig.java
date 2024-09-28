@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Configuration;
                 version = "v1"
         ),
         servers = {
-                @Server(url="http://localhost:8080", description = "로컬 서버")
+                @Server(url="http://localhost:8080", description = "로컬 서버"),
+                @Server(url="http://192.168.39.137:8080", description = "로컬 서버")
         }
 )
 
