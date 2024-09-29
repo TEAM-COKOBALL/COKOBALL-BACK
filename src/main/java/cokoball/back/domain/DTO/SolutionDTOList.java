@@ -1,21 +1,22 @@
 package cokoball.back.domain.DTO;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter @Setter
 public class SolutionDTOList {
-    private List<SolutionDTO> solutions;
+    private List<EmotionWithSolutionDTO> solutions;
 
-    public SolutionDTOList() {}
-
-    public SolutionDTOList(List<SolutionDTO> solutions) {
+    public SolutionDTOList(List<EmotionWithSolutionDTO> solutions) {
         this.solutions = solutions;
     }
 
-    public List<SolutionDTO> getSolutions() {
-        return solutions;
+    @Getter @Setter
+    public static class EmotionWithSolutionDTO {
+        private Long emotionId;
+        private String solutionContent;
     }
 
-    public void setSolutions(List<SolutionDTO> solutions) {
-        this.solutions = solutions;
-    }
 }
