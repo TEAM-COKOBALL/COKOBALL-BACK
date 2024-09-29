@@ -2,28 +2,30 @@ package cokoball.back.domain.Service;
 
 import cokoball.back.domain.DTO.EmotionDTO;
 import cokoball.back.domain.Entity.Emotion;
+import cokoball.back.domain.Entity.Solution;
 import cokoball.back.domain.Repository.EmotionRepository;
+import cokoball.back.domain.Repository.SolutionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class EmotionService {
+
     private final EmotionRepository emotionRepository;
+    private final SolutionRepository solutionRepository;
 
-    public EmotionService(EmotionRepository emotionRepository) {
-        this.emotionRepository = emotionRepository;
+    public List<EmotionDTO> getAllEmotions(Long userId) {
+        return emotionRepository.findAllByUserId(userId).stream().map(EmotionDTO::new).toList();
     }
 
-    public List<EmotionDTO> getAllEmotions() {
-        return emotionRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    public void getAllEmotionsWithSolutions(Long userId) {
+
     }
 
-    private EmotionDTO toDto(Emotion emotion) {
-        EmotionDTO dto = new EmotionDTO();
-        dto.setId(emotion.getId());
-        dto.setType(emotion.getType());
-        return dto;
-    }
+
 }
