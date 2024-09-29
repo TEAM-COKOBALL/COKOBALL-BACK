@@ -17,15 +17,9 @@ import java.util.List;
 public class EmotionService {
 
     private final EmotionRepository emotionRepository;
-    private final SolutionRepository solutionRepository;
 
     public List<EmotionDTO> getAllEmotions(Long userId) {
         return emotionRepository.findAllByUserId(userId).stream().map(EmotionDTO::new).toList();
     }
-
-    public void getAllEmotionsWithSolutions(Long userId) {
-
-    }
-
 
 }
