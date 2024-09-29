@@ -42,18 +42,14 @@ public class AuthController {
 
         log.info("username : {} , password : {}", requestDTO.getUsername(), requestDTO.getPassword());
 
-        String token = userService.login(requestDTO.getUsername(), requestDTO.getPassword());
-        Map<String, Object> response = new HashMap<>();
+        // 로그인 처리 및 토큰 생성
+        Map<String, Object> result = userService.loginWithUserInfo(requestDTO.getUsername(), requestDTO.getPassword());
 
-        if (token.equals("아이디 또는 비밀번호가 틀렸습니다.")) {
-            response.put("status", "error");
-            response.put("message", "아이디 또는 비밀번호가 틀렸습니다.");
-            return ResponseEntity.status(401).body(response);  // 401 Unauthorized 반환
+        // 로그인 실패
+        if (result.get("token").equals("아이디 또는 비밀번호가 틀렸습니다.")) {
+            return ResponseEntity.status(401).body(result);  // 401 Unauthorized 반환
         } else {
-            response.put("status", "success");
-            response.put("token", token);  // 로그인 성공 시 JWT 토큰 반환
-            response.put("message", "로그인 성공");
-            return ResponseEntity.ok(response);  // 200 OK 응답 반환
+            return ResponseEntity.ok(result);  // 200 OK 응답 반환
         }
     }
 }

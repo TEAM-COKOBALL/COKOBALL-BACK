@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,7 +38,6 @@ public class UserService {
             return "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
         }
 
-
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -46,15 +46,26 @@ public class UserService {
         return "회원가입 성공";
     }
 
-    public String login(String username, String password) {
+    public Map<String, Object> loginWithUserInfo(String username, String password) {
         Optional<User> user = userRepository.findByUsername(username);
+        Map<String, Object> response = new HashMap<>();
+
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             // 로그인 성공 시 토큰 생성 및 반환
             String token = jwtTokenProvider.createToken(username);
             log.info("Generated Token for {}: {}", username, token);  // 토큰 로그 출력
-            return token;
+
+            // 토큰과 함께 사용자 정보도 반환
+            response.put("status", "success");
+            response.put("token", token);
+            response.put("username", username);
+            response.put("message", "로그인 성공");
+            return response;
         } else {
-            return "아이디 또는 비밀번호가 틀렸습니다.";
+            response.put("status", "error");
+            response.put("token", "아이디 또는 비밀번호가 틀렸습니다.");
+            response.put("message", "로그인 실패");
+            return response;
         }
     }
 }
