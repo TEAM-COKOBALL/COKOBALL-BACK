@@ -9,6 +9,5 @@ public class UserDTO {
     private String username;
     private String password;
     private String passwordConfirm;
-    private int level;
     private LocalDateTime createdAt;
 }

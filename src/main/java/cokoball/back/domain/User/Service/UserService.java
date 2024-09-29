@@ -41,7 +41,6 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setLevel(1);
         userRepository.save(user);
 
         return "회원가입 성공";
